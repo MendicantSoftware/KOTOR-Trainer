@@ -5,8 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "WolfgangDebug.h"
-
 #pragma once
 
 std::vector<DWORD_PTR> FindValueInMemory(HANDLE hProcess, int valueToFind, DWORD_PTR baseAddress, size_t regionSize) {

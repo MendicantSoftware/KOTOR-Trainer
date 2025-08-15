@@ -2,8 +2,6 @@
 #include <TlHelp32.h>
 #include <tchar.h>
 
-#include "WolfgangDebug.h"
-
 int GetProcessID(const wchar_t* czProcessName) {
 
     DWORD pID = 0;

@@ -6,7 +6,6 @@
 #include <iostream>
 #include <vector>
 
-#include "WolfgangDebug.h"
 
 #include "AddressScanning.h"
 #include "Offsets.h"
@@ -49,31 +48,10 @@ bool WriteAtAddress(HANDLE hProcess, DWORD_PTR ptrAddress, DataType tValue) {
 DWORD ReadDWORDAtAddress(HANDLE hProcess, DWORD_PTR ptrAddress, bool bDebug) {
     DWORD iValue = 0;
     
-    WG::printvarhex("Reading Value at Address", ptrAddress);
-
     if (ReadProcessMemory(hProcess, (LPCVOID)ptrAddress, &iValue, sizeof(DWORD), nullptr) == 0) {
-        if (bDebug) WG::print("Read Failed!");
         return 0;
     } else {
-        if (bDebug) WG::printvarhex("Read Value", iValue, true);
-    }
-    return iValue;
-}
-
-//Make Templated
-bool WriteDWORDAtAddress(HANDLE hProcess, DWORD_PTR ptrTargetPointer, DWORD iValue) {
-
-    size_t iBytesWritten = 0;
-
-    WG::printvarhex("Writing value", iValue, true);
-    WG::printvarhex("Address", ptrTargetPointer);
-
-    if (WriteProcessMemory(hProcess, (LPVOID)ptrTargetPointer, &iValue, sizeof(iValue), &iBytesWritten) == 0) {
-        WG::print("Write Failed");
-        return false;
-    } else {
-        WG::print("Write Successful");
-        return true;
+        return iValue;
     }
 }
 

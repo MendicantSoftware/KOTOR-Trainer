@@ -10,7 +10,6 @@
 
 #include <limits>
 
-#include "WolfgangDebug.h"
 
 #include "Offsets.h"
 #include "ModuleData.h"

@@ -4,7 +4,7 @@
 #include "ReadWrite.h"
 
 #include "console.h"
-#include "WolfgangDebug.h"
+
 
 void CappedFloat(float& fFloat, float fSpeed, const int iDirection) {
 
