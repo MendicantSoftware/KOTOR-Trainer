@@ -160,6 +160,7 @@ void WriteOverScannedAddresses(HANDLE hProcess) {
 
     if (!vptrFoundAddresses.empty()) {
         std::cout << "\nFound " << std::dec << vptrFoundAddresses.size() << " possible addresses:\n";
+        std::cout << "A lower number indicates a higher chance of success\n";
         for (const auto& ptrAddress : vptrFoundAddresses) {
             std::cout << "  - 0x" << std::hex << ptrAddress << '\n';
             int iWriteValue = iIntendedValue;
@@ -169,6 +170,10 @@ void WriteOverScannedAddresses(HANDLE hProcess) {
     } else {
         std::cerr << "Value not found in any memory region.\n";
     }
+
+    std::cout << "Press enter to continue\n";
+    kmManager.CaptureInt();
+
 
 }
 

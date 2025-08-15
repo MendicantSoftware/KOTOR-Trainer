@@ -118,6 +118,7 @@ int main(int argc, char* argv[]) {
 
                     case VK_NUMPAD4:
                         WriteOverScannedAddresses(hProcess);
+                        clearScreen();
                         break;
 
                     case VK_NUMPAD5:

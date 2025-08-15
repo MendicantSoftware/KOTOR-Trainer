@@ -344,8 +344,6 @@ class KeyManager {
             try {
                 iValue = std::stoi(sValue);
             } catch (...) {
-                std::cout << "Bad Value";
-                Sleep(2000);
                 iValue = BAD_INT_CAPTURE;
             }
 
