@@ -61,6 +61,8 @@ int main(int argc, char* argv[]) {
 
     KeyManager kmManager(-1);
 
+    PersistenceManager pmPersistent(hProcess);
+
     clearScreen();
 
     while (bMenu) {
@@ -70,9 +72,10 @@ int main(int argc, char* argv[]) {
         std::cout << "MAIN MENU:\n";
 
         std::cout << "1. Attributes & Levelling\n";
-        std::cout << "2. Debugging & Developer Tools\n";
-        std::cout << "3. Give Credits\n";
-        std::cout << "4. Freecam\n";
+        std::cout << "2. Combat\n";
+        std::cout << "3. Debugging & Developer Tools\n";
+        std::cout << "4. Give Credits\n";
+        std::cout << "5. Freecam\n";
         std::cout << "CTRL + *. Exit\n";
 
         kmManager.GetKeyPresses();
@@ -86,6 +89,7 @@ int main(int argc, char* argv[]) {
                     case VK_MULTIPLY:
                         clearScreen();
                         CloseHandle(hProcess);
+                        pmPersistent.JoinThread();
                         return 0;
                         break;
 
@@ -106,14 +110,18 @@ int main(int argc, char* argv[]) {
                         break;
 
                     case VK_NUMPAD2:
-                        DebugMenu(hProcess);
+                        CombatMenu(hProcess, pmPersistent);
                         break;
 
                     case VK_NUMPAD3:
-                        WriteOverScannedAddresses(hProcess);
+                        DebugMenu(hProcess);
                         break;
 
                     case VK_NUMPAD4:
+                        WriteOverScannedAddresses(hProcess);
+                        break;
+
+                    case VK_NUMPAD5:
                         Freecam(hProcess);
                         break;
 

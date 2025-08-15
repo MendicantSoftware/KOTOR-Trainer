@@ -113,30 +113,34 @@ bool WriteUserByteAtAddress(HANDLE hProcess, DWORD_PTR ptrTargetPointer, int iEn
 
 }
 
-bool WriteUserDWORDAtAddress(HANDLE hProcess, DWORD_PTR ptrTargetPointer) {
+bool WriteUserDWORDAtAddress(HANDLE hProcess, DWORD_PTR ptrTargetPointer, int iEntryKey) {
 
     size_t iBytesWritten = 0;
-    DWORD iValue = 0;
+
+    KeyManager kmManager(iEntryKey);
 
     std::cout << "Enter desired value:\n";
 
-    std::cin >> iValue;
+    int iValue = kmManager.CaptureInt();
 
-    if (std::cin.fail()) {
-        WG::print("ERROR -> INVALID ENTRY");
+
+    if (iValue == BAD_INT_CAPTURE) {
+        clearScreen();
         return false;
     }
 
-    WG::printvarhex("Writing value", iValue, true);
-    WG::printvarhex("Address", ptrTargetPointer);
+    DWORD dwValue = static_cast<DWORD>(iValue);
 
-    if (WriteProcessMemory(hProcess, (LPVOID)ptrTargetPointer, &iValue, sizeof(iValue), &iBytesWritten) == 0) {
-        WG::print("Write Failed");
+    if (WriteProcessMemory(hProcess, (LPVOID)ptrTargetPointer, &dwValue, sizeof(dwValue), &iBytesWritten) == 0) {
+        clearScreen();
+        std::cout << "Failure";
+        Sleep(5000);
         return false;
     } else {
-        WG::print("Write Successful");
+        clearScreen();
         return true;
     }
+
 }
 
 void WriteByteAtAddress(HANDLE hProcess, DWORD_PTR ptrDynamicAddress, BYTE bValue) {
@@ -165,6 +169,8 @@ void WriteFloatAtAddress(HANDLE hProcess, DWORD_PTR ptrDynamicAddress, float fVa
 }
 
 void WriteOverScannedAddresses(HANDLE hProcess) {
+
+    //So fucking deprecated it isn't funny but I'm lazy :(
 
     int iSearchValue = 0;
     int iIntendedValue = 0;
@@ -206,6 +212,6 @@ void WriteOverScannedAddresses(HANDLE hProcess) {
 void InvertWriteBool(HANDLE hProcess, bool& bValue, DWORD_PTR ptrAddress) {
 
     bValue = !bValue;
-    WriteByteAtAddress(hProcess, ptrAddress, bValue);
+    WriteAtAddress(hProcess, ptrAddress, bValue);
 
 }

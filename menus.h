@@ -2,6 +2,7 @@
 #include "KeyManager.h"
 #include "ReadWrite.h"
 
+#include "Persistent.h"
 
 bool AttributesMenu(HANDLE hProcess) {
 
@@ -124,7 +125,6 @@ bool DebugMenu(HANDLE hProcess) {
     clearScreen();
 
     bool bMenu = true;
-    int iSelection = 0;
 
     bool bTriggerRendering = false;
     bool bBoundingBoxes = false;
@@ -132,7 +132,7 @@ bool DebugMenu(HANDLE hProcess) {
     bool bPersonalSpace = false;
     bool bLighting = true;
 
-    KeyManager kmManager(VK_NUMPAD2);
+    KeyManager kmManager(VK_NUMPAD3);
 
     while (bMenu) {
 
@@ -178,4 +178,50 @@ bool DebugMenu(HANDLE hProcess) {
 
     clearScreen();
     return false;
+}
+
+bool CombatMenu(HANDLE hProcess, PersistenceManager& pmPersistent) {
+    
+    clearScreen();
+
+    bool bMenu = true;
+
+    static bool bInfiniteForce = false;
+
+    KeyManager kmManager(VK_NUMPAD2);
+
+    while (bMenu) {
+
+        ResetCursor();
+
+        std::cout << "Combat:\n";
+
+        std::cout << "1. Damage Multiplier\n";
+        std::cout << "2. Toggle Infinite Force\n";
+        std::cout << "*. Return to Root Menu\n";
+
+        kmManager.GetKeyPresses();
+
+        for (const auto iKeyPress : kmManager.viLastKeyPresses) {
+
+            switch (iKeyPress) {
+                case VK_NUMPAD1:
+                    WriteUserDWORDAtAddress(hProcess, ptrDamageMultiplier, VK_NUMPAD1);
+                    break;
+                case VK_NUMPAD2:
+                    bInfiniteForce = !bInfiniteForce;
+                    pmPersistent.bReplenishForce.store(bInfiniteForce);
+                    break;
+                case VK_MULTIPLY:
+                    bMenu = false;
+                    break;
+            }
+
+        }
+
+    }
+
+    clearScreen();
+    return false;
+
 }

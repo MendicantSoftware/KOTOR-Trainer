@@ -12,8 +12,6 @@ std::vector<DWORD_PTR> vptrExperienceOffsets = {0x003A39FC, 0x4, 0x4, 0x3C0, 0xF
 
 DWORD_PTR ptrExperienceDynamicAddress = 0;
 
-DWORD_PTR ptrForceOffset = 0xBC;
-
 DWORD_PTR ptrStrengthOffset = 0x81;
 DWORD_PTR ptrStrengthModifierOffset = 0x82;
 
@@ -55,5 +53,6 @@ DWORD_PTR ptrCameraZRotation = 0x0078e444;
 DWORD_PTR ptrCameraXRotation = 0x0078e448;
 DWORD_PTR ptrCameraYRotation = 0x0078e44C;
 
-//GetBasePointer
-
+//Combat Pointers
+DWORD_PTR ptrDamageMultiplier = 0x007a1b30;
+DWORD_PTR ptrForceOffset = 0xBC;

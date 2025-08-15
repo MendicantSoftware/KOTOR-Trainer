@@ -40,14 +40,31 @@ void Freecam(HANDLE hProcess) {
 
         clearScreen();
 
+        std::cout << "Camera X: " << fXPosition << '\n';
+        std::cout << "Camera Y: " << fYPosition << '\n'; 
+        std::cout << "Camera Z: " << fZPosition << '\n';
+
+        std::cout << "Numpad controls X & Z movement/rotation\n";
+        std::cout << "Plus and Minus controls Y movement/rotation\n";
+        std::cout << "Shift controls speed\n";
+        std::cout << "Ctrl swaps between rotation and movement\n";
+        std::cout << "Astrix to close menu and return camera control to default\n";
+
         while(bFreeCam) {
 
-            COORD cPosition{0, 0};
-            SetConsoleCursorPosition(hConsole, cPosition);
+            float fSpeed = 0.5;
+            float fRotationSpeed = 0.01f;
+
+            ResetCursor();
 
             std::cout << "Camera X: " << fXPosition << '\n';
             std::cout << "Camera Y: " << fYPosition << '\n'; 
             std::cout << "Camera Z: " << fZPosition << '\n';
+
+            if (GetAsyncKeyState(VK_SHIFT) & 0x8000) {
+                fSpeed = fSpeed / 2;
+                fRotationSpeed = fRotationSpeed / 2;
+            }
 
             if (GetAsyncKeyState(VK_CONTROL) & 0x8000) {
 
