@@ -67,6 +67,21 @@ void clearLine(SHORT iCursorYPos) {
 
 }
 
+void PrintBoolColouredText(const char* czMessage, const bool bBool) {
+
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(hConsole, &csbi);
+
+    if (bBool) SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN);
+    if (!bBool) SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED);
+
+    std::cout << czMessage;
+
+    SetConsoleTextAttribute(hConsole, csbi.wAttributes);
+
+}
+
 void TitleScreen() {
     std::cout << R"( _  _____ _____ ___  ____    _____ ____      _    ___ _   _ _____ ____  )" << "\n";
     std::cout << R"(| |/ / _ \_   _/ _ \|  _ \  |_   _|  _ \    / \  |_ _| \ | | ____|  _ \ )" << "\n";

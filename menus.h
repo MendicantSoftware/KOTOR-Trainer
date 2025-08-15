@@ -126,11 +126,11 @@ bool DebugMenu(HANDLE hProcess) {
 
     bool bMenu = true;
 
-    bool bTriggerRendering = false;
-    bool bBoundingBoxes = false;
-    bool bWireFrame = false;
-    bool bPersonalSpace = false;
-    bool bLighting = true;
+    static bool bTriggerRendering = false;
+    static bool bBoundingBoxes = false;
+    static bool bWireFrame = false;
+    static bool bPersonalSpace = false;
+    static bool bLighting = true;
 
     KeyManager kmManager(VK_NUMPAD3);
 
@@ -140,11 +140,12 @@ bool DebugMenu(HANDLE hProcess) {
 
         std::cout << "Debug:\n";
 
-        std::cout << "1. Toggle Trigger Rendering\n";
-        std::cout << "2. Toggle Bounding Boxes(AABB)\n";
-        std::cout << "3. Toggle Wireframe\n";
-        std::cout << "4. Toggle Personal Space Rendering\n";
-        std::cout << "5. Toggle Lighting\n";
+        PrintBoolColouredText("1. Toggle Trigger Rendering\n", bTriggerRendering);
+        PrintBoolColouredText("2. Toggle Bounding Boxes(AABB)\n", bBoundingBoxes);
+        PrintBoolColouredText("3. Toggle Wireframe\n", bWireFrame);
+        PrintBoolColouredText("4. Toggle Personal Space Rendering\n", bPersonalSpace);
+        PrintBoolColouredText("5. Toggle Lighting\n", bLighting);
+
         std::cout << "*. Return to Root Menu\n";
 
         kmManager.GetKeyPresses();
@@ -197,7 +198,7 @@ bool CombatMenu(HANDLE hProcess, PersistenceManager& pmPersistent) {
         std::cout << "Combat:\n";
 
         std::cout << "1. Damage Multiplier\n";
-        std::cout << "2. Toggle Infinite Force\n";
+        PrintBoolColouredText("2. Toggle Infinite Force\n", bInfiniteForce);
         std::cout << "*. Return to Root Menu\n";
 
         kmManager.GetKeyPresses();

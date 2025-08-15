@@ -134,6 +134,7 @@ void Freecam(HANDLE hProcess) {
                 if (GetAsyncKeyState(VK_MULTIPLY) & 0x8000) {
                     bFreeCam = false;
                     WriteAtAddress(hProcess, ptrCameraLock, BYTE(0));
+                    clearScreen();
                     return;
                 }
 
