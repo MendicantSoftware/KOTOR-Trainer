@@ -21,7 +21,7 @@ homies hate me, but this brings us around to the next point.
 
 The trainer is entirely open source, and is header only, so I would highly recommend building it yourself, or at least glancing in the general direction of the code - if not to change the keybindings, to at least
 not risk performing a 2008 Frostwire-equse destruction of the family computer. Outside of the Windows api and the STL, it has no dependencies, so building it should not be as painful as the average C++ build
-process (g++ -DUNICODE-D_UNICODE main.cpp -o main.exe). The main.exe is avaliable in the repo for those who have great faith in technocommunism, I wish I were as brave as you wow.
+process (g++ -DUNICODE-D_UNICODE main.cpp -o main.exe). The main.exe is available in the repo for those who have great faith in technocommunism, I wish I were as brave as you wow.
 
 ## Future Updates
 
