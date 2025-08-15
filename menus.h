@@ -188,6 +188,7 @@ bool CombatMenu(HANDLE hProcess, PersistenceManager& pmPersistent) {
     bool bMenu = true;
 
     static bool bInfiniteForce = false;
+    static bool bInfiniteHealth = false;
 
     KeyManager kmManager(VK_NUMPAD2);
 
@@ -199,6 +200,7 @@ bool CombatMenu(HANDLE hProcess, PersistenceManager& pmPersistent) {
 
         std::cout << "1. Damage Multiplier\n";
         PrintBoolColouredText("2. Toggle Infinite Force\n", bInfiniteForce);
+        PrintBoolColouredText("3. Toggle Infinite Health\n", bInfiniteHealth);
         std::cout << "*. Return to Root Menu\n";
 
         kmManager.GetKeyPresses();
@@ -212,6 +214,10 @@ bool CombatMenu(HANDLE hProcess, PersistenceManager& pmPersistent) {
                 case VK_NUMPAD2:
                     bInfiniteForce = !bInfiniteForce;
                     pmPersistent.bReplenishForce.store(bInfiniteForce);
+                    break;
+                case VK_NUMPAD3:
+                    bInfiniteHealth = !bInfiniteHealth;
+                    pmPersistent.bReplenishHealth.store(bInfiniteHealth);
                     break;
                 case VK_MULTIPLY:
                     bMenu = false;

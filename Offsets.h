@@ -56,3 +56,4 @@ DWORD_PTR ptrCameraYRotation = 0x0078e44C;
 //Combat Pointers
 DWORD_PTR ptrDamageMultiplier = 0x007a1b30;
 DWORD_PTR ptrForceOffset = 0xBC;
+std::vector<DWORD_PTR> vptrHealthOffsets = {0x003A39FC, 0x4, 0x4, 0x3C0, 0xF8, 0xDC};
