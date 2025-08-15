@@ -21,16 +21,22 @@ DWORD_PTR CalculateExperienceDerivedAddress(HANDLE hProcess, DWORD_PTR iOffset) 
 
 }
 
-//Make Templated
-DWORD ReadDWORDAtAddress(HANDLE hProcess, DWORD_PTR ptrAddress) {
-    DWORD iValue = 0;
+template <typename DataType>
+bool ReadAtAddress(HANDLE hProcess, DWORD_PTR ptrAddress, DataType& dtValue) {
+    DataType dtValue{};
 
-    if (ReadProcessMemory(hProcess, (LPCVOID)ptrAddress, &iValue, sizeof(DWORD), nullptr) == 0) {
-        return 0;
-    } else {
-    }
+    if (ReadProcessMemory(hProcess, (LPCVOID)ptrAddress, &dtValue, sizeof(DataType), nullptr) == 0) return false;
 
-    return iValue;
+    return true;
+}
+
+template <typename DataType>
+DataType ReadAtAddress(HANDLE hProcess, DWORD_PTR ptrAddress) {
+    DataType dtValue{};
+
+    if (ReadProcessMemory(hProcess, (LPCVOID)ptrAddress, &dtValue, sizeof(DataType), nullptr) == 0) return -1;
+    return dtValue;
+
 }
 
 template <typename DataType>
@@ -121,30 +127,6 @@ bool WriteUserDWORDAtAddress(HANDLE hProcess, DWORD_PTR ptrTargetPointer, int iE
 
 }
 
-void WriteByteAtAddress(HANDLE hProcess, DWORD_PTR ptrDynamicAddress, BYTE bValue) {
-
-    size_t iBytesWritten = 0;
-
-    if (WriteProcessMemory(hProcess, (LPVOID)ptrDynamicAddress, &bValue, sizeof(bValue), &iBytesWritten) == 0) {
-        std::cout << "Failed to write byte\n";
-    } else {
-        std::cout << "Successfully injected value: " << std::to_string(bValue) << " at address: " << std::hex << ptrDynamicAddress << '\n';
-    }
-
-}
-
-
-void WriteFloatAtAddress(HANDLE hProcess, DWORD_PTR ptrDynamicAddress, float fValue) {
-
-    size_t iBytesWritten = 0;
-
-    if (WriteProcessMemory(hProcess, (LPVOID)ptrDynamicAddress, &fValue, sizeof(fValue), &iBytesWritten) == 0) {
-        std::cout << "Failed to write byte\n";
-    } else {
-        std::cout << "Successfully injected value: " << std::to_string(fValue) << " at address: " << std::hex << ptrDynamicAddress << '\n';
-    }
-
-}
 
 void WriteOverScannedAddresses(HANDLE hProcess) {
 
