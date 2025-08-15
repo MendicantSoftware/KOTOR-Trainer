@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
         std::cout << "1. Attributes & Levelling\n";
         std::cout << "2. Combat\n";
         std::cout << "3. Debugging & Developer Tools\n";
-        std::cout << "4. Give Credits\n";
+        std::cout << "4. Find & Write Value\n";
         std::cout << "5. Freecam\n";
         std::cout << "CTRL + *. Exit\n";
 

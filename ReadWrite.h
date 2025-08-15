@@ -23,7 +23,6 @@ DWORD_PTR CalculateExperienceDerivedAddress(HANDLE hProcess, DWORD_PTR iOffset) 
 
 template <typename DataType>
 bool ReadAtAddress(HANDLE hProcess, DWORD_PTR ptrAddress, DataType& dtValue) {
-    DataType dtValue{};
 
     if (ReadProcessMemory(hProcess, (LPCVOID)ptrAddress, &dtValue, sizeof(DataType), nullptr) == 0) return false;
 
@@ -130,6 +129,8 @@ bool WriteUserDWORDAtAddress(HANDLE hProcess, DWORD_PTR ptrTargetPointer, int iE
 
 void WriteOverScannedAddresses(HANDLE hProcess) {
 
+    KeyManager kmManager(VK_NUMPAD4);
+
     //So fucking deprecated it isn't funny but I'm lazy :(
 
     int iSearchValue = 0;
@@ -141,22 +142,24 @@ void WriteOverScannedAddresses(HANDLE hProcess) {
     std::cout << "If you do not wish to continue, type an invalid value into the following prompt.\n\n\n";
 
     std::cout << "Enter the target address' CURRENT VALUE:\n";
-    std::cin >> iSearchValue;
-    if (std::cin.fail()) {
-        std::cout << "Invalid Value at Search: Cancelling Search!\n";
+    iSearchValue = kmManager.CaptureInt();
+
+    if (iSearchValue == BAD_INT_CAPTURE) {
         return;
     }
+
+
     std::cout << "\nEnter the target address' INTENDED VALUE:\n";
-    std::cin >> iIntendedValue;
-    if (std::cin.fail()) {
-        std::cout << "Invalid Value at Intended: Cancelling Search!\n";
+    iIntendedValue = kmManager.CaptureInt();
+
+    if (iIntendedValue == BAD_INT_CAPTURE) {
         return;
     }
 
     std::vector<DWORD_PTR> vptrFoundAddresses = ScanProcessForValue(hProcess, iSearchValue);
 
     if (!vptrFoundAddresses.empty()) {
-        std::cout << "\nFound " << std::dec << vptrFoundAddresses.size() << " possible addresses for credits:\n";
+        std::cout << "\nFound " << std::dec << vptrFoundAddresses.size() << " possible addresses:\n";
         for (const auto& ptrAddress : vptrFoundAddresses) {
             std::cout << "  - 0x" << std::hex << ptrAddress << '\n';
             int iWriteValue = iIntendedValue;
@@ -164,7 +167,7 @@ void WriteOverScannedAddresses(HANDLE hProcess) {
             WriteProcessMemory(hProcess, (LPVOID)ptrAddress, &iWriteValue, sizeof(iWriteValue), &bytesWritten);
         }
     } else {
-        std::cerr << "Credits value not found in any memory region.\n";
+        std::cerr << "Value not found in any memory region.\n";
     }
 
 }
