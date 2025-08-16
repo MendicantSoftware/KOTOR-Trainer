@@ -15,10 +15,20 @@
 
 #pragma once
 
-DWORD_PTR CalculateExperienceDerivedAddress(HANDLE hProcess, DWORD_PTR iOffset) {
+DWORD_PTR CalculateExperienceDerivedAddress(HANDLE hProcess, DWORD_PTR ptrOffset) {
+    return FindDynamicAddress(hProcess, ptrBaseAddress, vptrExperienceOffsets) + ptrOffset;
+}
 
-    return FindDynamicAddress(hProcess, ptrBaseAddress, vptrExperienceOffsets) + iOffset;
-
+/**
+ * @brief Applies an offset to a pointer chain to determine a DWORD_PTR address. `FindDynamicAddress()` does this without applying the custom offset.
+ *
+ * @param hProcess A handle to the target process.
+ * @param vptrPointerChain A vector of offsets that produce an address the custom offset is relative to.
+ * @param ptrOffset The final offset to be applied to the pointer chain to calculate the final address, negative offsets are permitted.
+ * @return Returns the address of the pointer chain, with the final offset applied.
+ */
+DWORD_PTR CalculateOffsetFromPointerChain(HANDLE hProcess, std::vector<DWORD_PTR> vptrPointerChain, DWORD_PTR ptrOffset) {
+    return FindDynamicAddress(hProcess, ptrBaseAddress, vptrPointerChain) + ptrOffset;
 }
 
 template <typename DataType>
@@ -38,6 +48,14 @@ DataType ReadAtAddress(HANDLE hProcess, DWORD_PTR ptrAddress) {
 
 }
 
+/**a
+ * @brief Writes a given value to the provided memory address within the target process.
+ *
+ * @param hProcess A handle to the target process.
+ * @param ptrAddress The address to be written to. See `CalculateOffsetFromPointerChain()` or `FindDynamicAddress()` to assist with this.
+ * @param tValue The value and type to be written to the target address.
+ * @return True if the write is successful, otherwise false. Note that successful writes to the wrong address still return true.
+ */
 template <typename DataType>
 bool WriteAtAddress(HANDLE hProcess, DWORD_PTR ptrAddress, DataType tValue) {
     size_t iBytesWritten = 0;
@@ -49,16 +67,6 @@ bool WriteAtAddress(HANDLE hProcess, DWORD_PTR ptrAddress, DataType tValue) {
     }
 }
 
-//Make Templated
-DWORD ReadDWORDAtAddress(HANDLE hProcess, DWORD_PTR ptrAddress, bool bDebug) {
-    DWORD iValue = 0;
-    
-    if (ReadProcessMemory(hProcess, (LPCVOID)ptrAddress, &iValue, sizeof(DWORD), nullptr) == 0) {
-        return 0;
-    } else {
-        return iValue;
-    }
-}
 
 //Make templated?
 bool WriteUserByteAtAddress(HANDLE hProcess, DWORD_PTR ptrTargetPointer, int iEntryKey) {
@@ -126,6 +134,25 @@ bool WriteUserDWORDAtAddress(HANDLE hProcess, DWORD_PTR ptrTargetPointer, int iE
 
 }
 
+bool RescanAddresses(HANDLE hProcess, std::vector<DWORD_PTR>& vptrPreviousResults, KeyManager& kmManager) {
+
+    kmManager.UpdateEntryKey(VK_RETURN);
+
+    clearScreen();
+    std::cout << "A re-scan requires the target value to be changed PRIOR to the scan.\n";
+    std::cout << "Enter the target address' NEW VALUE:\n";
+    int iValue = kmManager.CaptureInt();
+
+    kmManager.UpdateEntryKey(VK_RETURN);
+
+    if (iValue == BAD_INT_CAPTURE) {
+        return false;
+    } else {
+        ScanProcessForValue(hProcess, vptrPreviousResults, iValue);
+        return true;
+    }
+   
+}
 
 void WriteOverScannedAddresses(HANDLE hProcess) {
 
@@ -157,15 +184,28 @@ void WriteOverScannedAddresses(HANDLE hProcess) {
     }
 
     std::vector<DWORD_PTR> vptrFoundAddresses = ScanProcessForValue(hProcess, iSearchValue);
+    std::cout << '\n';
 
     if (!vptrFoundAddresses.empty()) {
-        std::cout << "\nFound " << std::dec << vptrFoundAddresses.size() << " possible addresses:\n";
-        std::cout << "A lower number indicates a higher chance of success\n";
-        for (const auto& ptrAddress : vptrFoundAddresses) {
-            std::cout << "  - 0x" << std::hex << ptrAddress << '\n';
-            int iWriteValue = iIntendedValue;
-            size_t bytesWritten = 0;
-            WriteProcessMemory(hProcess, (LPVOID)ptrAddress, &iWriteValue, sizeof(iWriteValue), &bytesWritten);
+
+        bool bScanning = true;
+
+        while (bScanning) {
+            clearScreen();
+            std::cout << "Found " << std::dec << vptrFoundAddresses.size() << " possible addresses:\n";
+            std::cout << "A lower number indicates a higher chance of success\n";
+            std::cout << "Would you like to rescan? Enter a valid number for YES\n";
+            if (kmManager.CaptureInt() == BAD_INT_CAPTURE) {
+                bScanning = false;
+                for (const auto& ptrAddress : vptrFoundAddresses) {
+                    std::cout << "  - 0x" << std::hex << ptrAddress << '\n';
+                    int iWriteValue = iIntendedValue;
+                    size_t bytesWritten = 0;
+                    WriteProcessMemory(hProcess, (LPVOID)ptrAddress, &iWriteValue, sizeof(iWriteValue), &bytesWritten);
+                }
+            } else {
+                RescanAddresses(hProcess, vptrFoundAddresses, kmManager);
+            }
         }
     } else {
         std::cerr << "Value not found in any memory region.\n";
@@ -173,7 +213,6 @@ void WriteOverScannedAddresses(HANDLE hProcess) {
 
     std::cout << "Press enter to continue\n";
     kmManager.CaptureInt();
-
 
 }
 

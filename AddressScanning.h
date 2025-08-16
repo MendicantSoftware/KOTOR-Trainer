@@ -57,3 +57,20 @@ std::vector<DWORD_PTR> ScanProcessForValue(HANDLE hProcess, int iValueToFind) {
     }
     return vptrFoundAddresses;
 }
+
+void ScanProcessForValue(HANDLE hProcess, std::vector<DWORD_PTR>& vptrPreviousResults, int iValueToFind) {
+
+    std::vector<DWORD_PTR> vptrNewResults = {};
+
+    for (const auto PreviousResult : vptrPreviousResults) {
+
+        int iValue{}; 
+        ReadProcessMemory(hProcess, (LPCVOID)PreviousResult, &iValue, sizeof(iValueToFind), nullptr);
+
+        if (iValue == iValueToFind) vptrNewResults.push_back(PreviousResult);
+
+    }
+
+    vptrPreviousResults = std::move(vptrNewResults);
+
+}

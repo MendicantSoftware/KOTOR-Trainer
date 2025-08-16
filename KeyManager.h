@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <atomic>
 
 #include "console.h"
 
@@ -37,54 +38,78 @@ class KeyManager {
 
         KeyManager(int iEntryKey) {
 
+            UpdateEntryKey(iEntryKey);
+
+        }
+
+        bool UpdateEntryKey(int iEntryKey) {
+
+            bool bUpdated = false;
+
             switch (iEntryKey) {
 
                 case VK_NUMPAD1:
                     bOneKey = true;
+                    bUpdated = true;
                     break;
                 case VK_NUMPAD2:
                     bTwoKey = true;
+                    bUpdated = true;
                     break;
                 case VK_NUMPAD3:    
                     bThreeKey = true;
+                    bUpdated = true;
                     break;
                 case VK_NUMPAD4:
                     bFourKey = true;
+                    bUpdated = true;
                     break;  
                 case VK_NUMPAD5:
                     bFiveKey = true;
+                    bUpdated = true;
                     break;
                 case VK_NUMPAD6:
                     bSixKey = true;
+                    bUpdated = true;
                     break;
                 case VK_NUMPAD7:
                     bSevenKey = true;
+                    bUpdated = true;
                     break;
                 case VK_NUMPAD8:
                     bEightKey = true;
+                    bUpdated = true;
                     break;
                 case VK_NUMPAD9:
                     bNineKey = true;
+                    bUpdated = true;
                     break;
                 case VK_NUMPAD0:
                     bZeroKey = true;
+                    bUpdated = true;
                     break;
                 case VK_MULTIPLY:
                     bAstrixKey = true;
+                    bUpdated = true;
                     break;
                 case VK_CONTROL:
                     bControlKey = true;
+                    bUpdated = true;
                     break;
                 case VK_BACK:
                     bBackSpaceKey = true; 
+                    bUpdated = true;
                     break;
                 case VK_RETURN:
                     bEnterKey = true;
+                    bUpdated = true;
                     break;
                 default:
                     break;
 
             }
+
+            return bUpdated;
 
         }
         
