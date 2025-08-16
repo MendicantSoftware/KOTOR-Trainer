@@ -4,7 +4,7 @@
 
 #include "Persistent.h"
 
-bool AttributesMenu(HANDLE hProcess) {
+bool AttributesMenu(HANDLE hProcess, PersistenceManager& pmPersistent) {
 
     clearScreen();
 
@@ -19,6 +19,10 @@ bool AttributesMenu(HANDLE hProcess) {
 
     while (bMenu) {
 
+        if (pmPersistent.bInputLock.load()) {
+            Sleep(100);
+            continue;
+        } 
 
         ResetCursor();
 
@@ -120,7 +124,7 @@ bool AttributesMenu(HANDLE hProcess) {
     return false;
 }
 
-bool DebugMenu(HANDLE hProcess) {
+bool DebugMenu(HANDLE hProcess, PersistenceManager& pmPersistent) {
 
     clearScreen();
 
@@ -135,6 +139,11 @@ bool DebugMenu(HANDLE hProcess) {
     KeyManager kmManager(VK_NUMPAD3);
 
     while (bMenu) {
+
+        if (pmPersistent.bInputLock.load()) {
+            Sleep(100);
+            continue;
+        } 
 
         ResetCursor();
 
@@ -193,6 +202,11 @@ bool CombatMenu(HANDLE hProcess, PersistenceManager& pmPersistent) {
     KeyManager kmManager(VK_NUMPAD2);
 
     while (bMenu) {
+
+        if (pmPersistent.bInputLock.load()) {
+            Sleep(100);
+            continue;
+        } 
 
         ResetCursor();
 

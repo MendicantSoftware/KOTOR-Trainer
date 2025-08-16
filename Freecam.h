@@ -4,7 +4,7 @@
 #include "ReadWrite.h"
 
 #include "console.h"
-
+#include "Persistent.h"
 
 void CappedFloat(float& fFloat, float fSpeed, const int iDirection) {
 
@@ -19,7 +19,7 @@ void CappedFloat(float& fFloat, float fSpeed, const int iDirection) {
 
 }
 
-void Freecam(HANDLE hProcess) {
+void Freecam(HANDLE hProcess, PersistenceManager& pmPersistent) {
 
         bool bFreeCam = true;
 
@@ -51,6 +51,11 @@ void Freecam(HANDLE hProcess) {
         std::cout << "Astrix to close menu and return camera control to default\n";
 
         while(bFreeCam) {
+
+            if (pmPersistent.bInputLock.load()) {
+                Sleep(100);
+                continue;
+            } 
 
             float fSpeed = 0.5;
             float fRotationSpeed = 0.01f;

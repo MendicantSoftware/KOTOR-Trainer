@@ -7,6 +7,8 @@
 #include "ReadWrite.h"
 #include "Offsets.h"
 
+#pragma once
+
 class PersistenceManager {
 
     private: 
@@ -32,6 +34,8 @@ class PersistenceManager {
             this->hProcess = hProcess;
 
             bRunThread.store(true);
+
+            bInputLock.store(false);
 
             bReplenishForce.store(false);
             bReplenishHealth.store(false);
@@ -60,6 +64,13 @@ class PersistenceManager {
             }
 
             return bLock;
+
+        }
+
+        void InputLockMessage() {
+
+            std::cout << "Input lock is ON!\n";
+            std::cout << "Press / to turn it off\n";
 
         }
 

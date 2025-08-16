@@ -66,6 +66,11 @@ int main(int argc, char* argv[]) {
 
     while (bMenu) {
 
+        if (pmPersistent.bInputLock.load()) {
+            Sleep(100);
+            continue;
+        } 
+
         ResetCursor();
 
         std::cout << "MAIN MENU:\n";
@@ -105,7 +110,7 @@ int main(int argc, char* argv[]) {
                 switch (iKey) {
 
                     case VK_NUMPAD1:
-                        AttributesMenu(hProcess);
+                        AttributesMenu(hProcess, pmPersistent);
                         break;
 
                     case VK_NUMPAD2:
@@ -113,7 +118,7 @@ int main(int argc, char* argv[]) {
                         break;
 
                     case VK_NUMPAD3:
-                        DebugMenu(hProcess);
+                        DebugMenu(hProcess, pmPersistent);
                         break;
 
                     case VK_NUMPAD4:
@@ -122,7 +127,7 @@ int main(int argc, char* argv[]) {
                         break;
 
                     case VK_NUMPAD5:
-                        Freecam(hProcess);
+                        Freecam(hProcess, pmPersistent);
                         break;
 
                     default:
